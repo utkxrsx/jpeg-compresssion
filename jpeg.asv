@@ -1,0 +1,32 @@
+clear all, close all, clc
+A=imread('C:\Users\utkar\OneDrive\Desktop\cs\jpeg\IMG_20240312_011026.jpg');
+B=rgb2gray(A);
+figure
+imagesc(256-A)
+set(gcf,'Position',[1500 100 size(A,2) size(A,1)])
+
+%%fft
+
+Bt=fft2(B);
+Blog=log(abs(fftshift(Bt))+1);
+imshow(256-mat2gray(Blog),[]);
+set(gcf,'Position',[1500 100 size(A,2) size(A,1)])
+
+
+
+%%fft
+
+Btsort=sort(abs(Bt(:)));
+counter=1;
+for keep=[.99 .05 .01 .002]
+    subplot(2,2,counter)
+    thresh=Btsort(floor((1-keep)*length(Btsort)));
+    ind=abs(Bt)>thresh;
+    Atlow=Bt.*ind;
+    Alow=uint8(ifft2(Atlow));
+    imshow(256-Alow)
+    title(['',num2str(keep*100),'%'],'FontSize',36)
+    counter=counter+1;
+end
+set(gcf,'Position',[1750 100 1750 2000])
+
